@@ -63,3 +63,6 @@ GTAGS
 GRTAGS
 GSYMS
 GPATH
+gtags.files
+
+.DS_Store
