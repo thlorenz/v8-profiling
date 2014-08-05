@@ -28,60 +28,43 @@
 <!-- START README -->
 <h1 id="v8-profiling">v8-profiling</h1>
 <p>Exploring how to hook into the various v8 profilers.</p>
-<h2 id="tools">Tools</h2>
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<strong>Table of Contents</strong>  <em>generated with <a href="http://doctoc.herokuapp.com/">DocToc</a></em>
+
+- <a href="#tools">tools</a>
+  - <a href="#visualizers">visualizers</a>
+    - <a href="#plotting-tick-data">plotting tick data</a>
+      - <a href="#in-the-browser">In the browser</a>
+      - <a href="#from-the-command-line">From the command line</a>
+    - <a href="#heap-usage-histograms">heap usage histograms</a>
+      - <a href="#installing-hp2ps">installing hp2ps</a>
+      - <a href="#producing-v8log-with-gc-output">producing <code>v8.log</code> with GC output</a>
+      - <a href="#generating-histogram">generating histogram</a>
+      - <a href="#example">example</a>
+    - <a href="#gc-nvp-trace-processorpy">gc-nvp-trace-processor.py</a>
+    - <a href="#gdb-v8-supportpy">gdb-v8-support.py</a>
+  - <a href="#analyzers">analyzers</a>
+    - <a href="#gen-postmortem-metadatapy">gen-postmortem-metadata.py</a>
+    - <a href="#grokdumppy">grokdump.py</a>
+    - <a href="#stats-viewerpy">stats-viewer.py</a>
+  - <a href="#processing-tick-data">processing Tick Data</a>
+    - <a href="#tick-processorhtml">tick-processor.html</a>
+    - <a href="#command-line">Command Line</a>
+  - <a href="#perf-tools">perf tools</a>
+    - <a href="#ll_profpy">ll_prof.py</a>
+  - <a href="#misc">misc</a>
+    - <a href="#lexers-shellpy-and-parser-shellpy">lexers-shell.py and parser-shell.py</a>
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<h2 id="tools">tools</h2>
 <p>Interesting tools found inside <code>./tools</code>:</p>
-<h3 id="gc-nvp-trace-processor-py">gc-nvp-trace-processor.py</h3>
-<ul>
-<li>plots charts based on GC traces produced by running v8 with <code>--trace-gc --trace-gc-nvp</code></li>
-<li>plotting performed with <a href="http://www.gnuplot.info/">gnuplot</a> (needs <a href="http://sourceforge.net/projects/aquaterm/">aquaterm</a> on Mac or just <code>brew install gnuplot</code>)</li>
-<li>invoke <code>./gc-nvp-trace-processor &lt;tracefile&gt;</code></li>
-</ul>
-<p><a href="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/"><img src="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/tracing-gc.txt_0.png" alt="sample"></a></p>
-<h3 id="gdb-v8-support-py">gdb-v8-support.py</h3>
-<ul>
-<li>v8 value pretty printers for gdb</li>
-<li>should be easy to adapt to work with lldb?</li>
-</ul>
-<h3 id="gen-postmortem-metadata-py">gen-postmortem-metadata.py</h3>
-<ul>
-<li>generates C++ file to be compiled and linked into libv8 to support postmortem debugging tools</li>
-<li>emits constants describing v8 internals<ul>
-<li><code>v8dbg_type_CLASS__TYPE = VALUE</code>           Describes class type values</li>
-<li><code>v8dbg_class_CLASS__FIELD__TYPE = OFFSET</code>  Describes class fields</li>
-<li><code>v8dbg_parent_CLASS__PARENT</code>               Describes class hierarchy</li>
-<li><code>v8dbg_frametype_NAME = VALUE</code>             Describes stack frame values</li>
-<li><code>v8dbg_off_fp_NAME = OFFSET</code>               Frame pointer offsets</li>
-<li><code>v8dbg_prop_NAME = OFFSET</code>                 Object property offsets</li>
-<li><code>v8dbg_NAME = VALUE</code>                       Miscellaneous values</li>
-</ul>
-</li>
-</ul>
-<h3 id="grokdump-py">grokdump.py</h3>
-<p>Minidump analyzer.</p>
-<p>Shows the processor state at the point of exception including the stack of the active thread and the referenced objects
-in the V8 heap. Code objects are disassembled and the addresses linked from the stack (e.g. pushed return addresses) are
-marked with &quot;=&gt;&quot;.</p>
-<p><em>I didn&#39;t get this to work on Mac - haven&#39;t tried on Linux yet</em> <code>Warning: Unsupported minidump header magic!</code></p>
-<p>Needs <code>objdump</code>. Install on Mac via:</p>
-<pre><code>brew install binutils
-sudo ln -s $(which gobjdump) /usr/bin/objdump
-</code></pre><p>Create a coredump via <code>gcore &lt;pid&gt;</code>. Install on Mac via <code>brew install gcore</code>.</p>
-<h3 id="lexers-shell-py-and-parser-shell-py">lexers-shell.py and parser-shell.py</h3>
-<p>Tools to benchmark the lexer and parser respectively give a nice insight into how that API works.</p>
-<h3 id="processing-tick-data">Processing Tick Data</h3>
-<p>Producing tick data which will be stored in <code>v8.log</code> in current directory.</p>
-<pre><code>node --prof --track_gc_object_stats --trace_gc_verbose --log_timer_events app.js
-</code></pre><h4 id="tick-processor-html">tick-processor.html</h4>
-<ul>
-<li>open this page in the browser and load a <code>v8.log</code> to see the text area populated with processed tick data</li>
-</ul>
-<h4 id="command-line">Command Line</h4>
-<p>Depending on your operating system use <code>mac-tick-processor</code>, <code>linux-tick-processor</code> or <code>freebsd-tick-processor</code>.</p>
-<pre><code>mac-tick-processor v8.log &gt; v8.ticks
-</code></pre><h3 id="plotting-tick-data">Plotting tick data</h3>
+<h3 id="visualizers">visualizers</h3>
+<h4 id="plotting-tick-data">plotting tick data</h4>
 <p><a href="http://thlorenz.github.io/v8-profiling/demos/profviz/profviz/profviz.html"><img src="http://thlorenz.github.io/v8-profiling/images/profviz.svg" alt="profviz"></a></p>
 <p>v8 wiki <a href="https://code.google.com/p/v8/wiki/V8Profiler">documentation</a>.</p>
-<h4 id="in-the-browser">In the browser</h4>
+<h5 id="in-the-browser">In the browser</h5>
 <p>Do either of the below:</p>
 <ul>
 <li>a) launch the <a href="http://v8.googlecode.com/svn/branches/bleeding_edge/tools/profviz/profviz.html">bleeding edge</a> or
@@ -90,7 +73,7 @@ sudo ln -s $(which gobjdump) /usr/bin/objdump
 worker script. Point your browser to <code>http://localhost:PORT/profviz/profviz.html</code>  </li>
 </ul>
 <p>Then follow the instructions to load and then plot a <code>v8.log</code> file (by pressing <code>Start</code>).</p>
-<h4 id="from-the-command-line">From the command line</h4>
+<h5 id="from-the-command-line">From the command line</h5>
 <p><em>Requires gnuplot</em></p>
 <pre><code>./plot-timer-events v8.log
 </code></pre><p>If you get this error:</p>
@@ -98,8 +81,7 @@ worker script. Point your browser to <code>http://localhost:PORT/profviz/profviz
                       ^
     line 0: unknown or ambiguous terminal type; type just &#39;set terminal&#39; for a list
 </code></pre><p>apply this patch:</p>
-<pre><code class="lang-diff">---
- tools/profviz/stdio.js | 2 +-
+<pre><code class="lang-diff"> tools/profviz/stdio.js | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/profviz/stdio.js b/tools/profviz/stdio.js
@@ -114,14 +96,109 @@ index db38f04..b33b608 100644
 +print(&quot;set terminal png size &quot; + kResX + &quot;,&quot; + kResY +
        &quot; enhanced font &#39;Helvetica,10&#39;&quot;);
  psc.assembleOutput(print);
---
 </code></pre>
-<h3 id="perf-tools">perf tools</h3>
-<h4 id="-"> </h4>
+<h4 id="heap-usage-histograms">heap usage histograms</h4>
+<p><em>Integrates with <a href="https://www.haskell.org/ghc/docs/7.0.4/html/users_guide/hp2ps.html">hp2ps</a></em></p>
+<h5 id="installing-hp2ps">installing hp2ps</h5>
+<ul>
+<li>on Linux it comes bundles with GHC and valgrind</li>
+<li>on Mac it comes bundled with <a href="http://www.haskell.org/platform/">Haskell Platform</a> and is added to
+<code>/Library/Frameworks/GHC.framework/Versions/Current/usr/bin/</code></li>
+</ul>
+<p><code>process-heap-prof.py</code> converts v8 heap logs into .hp files that can be further processed using &#39;hp2ps&#39; tool (bundled
+with GHC and Valgrind) to produce heap usage histograms.</p>
+<h5 id="producing-v8-log-with-gc-output">producing <code>v8.log</code> with GC output</h5>
+<pre><code>./d8 --log-gc script.js
+</code></pre><h5 id="generating-histogram">generating histogram</h5>
+<pre><code>process-heap-prof.py v8.log | hp2ps -c &gt; script-heap-graph.ps
+</code></pre><p>or to get JS constructor profile</p>
+<pre><code>process-heap-prof.py --js_cons_profile v8.log | hp2ps -c &gt; script-heap-graph.ps
+</code></pre><h5 id="example">example</h5>
+<p><em>In order to get the example to work I <a href="https://github.com/thlorenz/v8-profiling/commit/84ec20f42417fde5450d85bff8efff7eb9670e92">made it look for NewSpace instead of
+Heap</a>.</em></p>
+<p>Example provided in <code>./tools/test/d8-gc.js</code>. Assuming you copied the <code>d8</code> binary to <code>./tools</code>, run as follows</p>
+<pre><code>cd test
+../d8 --expose-gc --always-compact d8-gc.js
+../process-heap-prof.py v8.log | h2p2s -c &gt; heap-graph.ps
+open heap-graph.ps
+</code></pre><h4 id="gc-nvp-trace-processor-py">gc-nvp-trace-processor.py</h4>
+<ul>
+<li>plots charts based on GC traces produced by running v8 with <code>--trace-gc --trace-gc-nvp</code></li>
+<li>plotting performed with <a href="http://www.gnuplot.info/">gnuplot</a> (needs <a href="http://sourceforge.net/projects/aquaterm/">aquaterm</a> on Mac or just <code>brew install gnuplot</code>)</li>
+<li>invoke <code>./gc-nvp-trace-processor &lt;tracefile&gt;</code></li>
+</ul>
+<p><a href="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/"><img src="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/tracing-gc.txt_0.png" alt="sample"></a></p>
+<h4 id="gdb-v8-support-py">gdb-v8-support.py</h4>
+<ul>
+<li>v8 value pretty printers for gdb</li>
+<li>should be easy to adapt to work with lldb?</li>
+</ul>
+<h3 id="analyzers">analyzers</h3>
+<h4 id="gen-postmortem-metadata-py">gen-postmortem-metadata.py</h4>
+<ul>
+<li>generates C++ file to be compiled and linked into libv8 to support postmortem debugging tools</li>
+<li>emits constants describing v8 internals<ul>
+<li><code>v8dbg_type_CLASS__TYPE = VALUE</code>           Describes class type values</li>
+<li><code>v8dbg_class_CLASS__FIELD__TYPE = OFFSET</code>  Describes class fields</li>
+<li><code>v8dbg_parent_CLASS__PARENT</code>               Describes class hierarchy</li>
+<li><code>v8dbg_frametype_NAME = VALUE</code>             Describes stack frame values</li>
+<li><code>v8dbg_off_fp_NAME = OFFSET</code>               Frame pointer offsets</li>
+<li><code>v8dbg_prop_NAME = OFFSET</code>                 Object property offsets</li>
+<li><code>v8dbg_NAME = VALUE</code>                       Miscellaneous values</li>
+</ul>
+</li>
+</ul>
+<h4 id="grokdump-py">grokdump.py</h4>
+<p>Minidump analyzer.</p>
+<p>Shows the processor state at the point of exception including the stack of the active thread and the referenced objects
+in the V8 heap. Code objects are disassembled and the addresses linked from the stack (e.g. pushed return addresses) are
+marked with &quot;=&gt;&quot;.</p>
+<p><em>I didn&#39;t get this to work on Mac - haven&#39;t tried on Linux yet</em> <code>Warning: Unsupported minidump header magic!</code></p>
+<p>Needs <code>objdump</code>. Install on Mac via:</p>
+<pre><code>brew install binutils
+sudo ln -s $(which gobjdump) /usr/bin/objdump
+</code></pre><p>Create a coredump via <code>gcore &lt;pid&gt;</code>. Install on Mac via <code>brew install gcore</code>.</p>
+<h4 id="stats-viewer-py">stats-viewer.py</h4>
+<p>A cross-platform execution counter viewer.</p>
+<p>The stats viewer reads counters from a binary file and displays them in a window, re-reading and re-displaying with
+regular intervals.</p>
+<pre><code>Usage: stats-viewer.py [--filter=re] &lt;stats data&gt;|&lt;test_shell pid&gt;
+
+Options:
+  -h, --help       show this help message and exit
+  --filter=FILTER  regexp filter for counter names [default: .*]
+</code></pre><h3 id="processing-tick-data">processing Tick Data</h3>
+<p>Producing tick data which will be stored in <code>v8.log</code> in current directory.</p>
+<pre><code>node --prof --track_gc_object_stats --trace_gc_verbose --log_timer_events app.js
+</code></pre><h4 id="tick-processor-html">tick-processor.html</h4>
+<ul>
+<li>open this page in the browser and load a <code>v8.log</code> to see the text area populated with processed tick data</li>
+</ul>
+<h4 id="command-line">Command Line</h4>
+<p>Depending on your operating system use <code>mac-tick-processor</code>, <code>linux-tick-processor</code> or <code>freebsd-tick-processor</code>.</p>
+<pre><code>mac-tick-processor v8.log &gt; v8.ticks
+</code></pre><h3 id="perf-tools">perf tools</h3>
+<h4 id="ll_prof-py">ll_prof.py</h4>
+<p><em>Requires perf tool and thus only works on Linux</em></p>
 <p>Analyses v8 perf logs to produce profiles.</p>
+<p>Collect perf data via the <code>run-llprof.sh</code> convenience script or manually.</p>
+<pre><code>perf record -R -e cycles -c 10000 -f -i ./d8 bench.js --ll-prof
+</code></pre><ul>
+<li><code>-R</code>: collect all data</li>
+<li><code>-e</code>: cycles: use cpu-cycles event (run &quot;perf list&quot; for details)</li>
+<li><code>-c</code>: 10000: write a sample after each 10000 events</li>
+<li><code>-f</code>: force output file overwrite</li>
+<li><code>-i</code>: limit profiling to our process and the kernel</li>
+<li><code>--ll-prof</code>: shell flag enables the right v8 logs</li>
+</ul>
+<p>This will produce a binary trace file (<code>perf.data</code>) that <code>ll_prof.py</code> can analyse.</p>
+<h3 id="misc">misc</h3>
+<h4 id="lexers-shell-py-and-parser-shell-py">lexers-shell.py and parser-shell.py</h4>
+<p>Tools to benchmark the lexer and parser respectively give a nice insight into how that API works.</p>
 
 
 <!-- END README -->
+
 
 
 
