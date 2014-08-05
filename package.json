@@ -1,0 +1,24 @@
+{
+  "name": "v8-profiling",
+  "version": "0.0.0",
+  "description": "Page generator for v8-profiling",
+  "main": "index.js",
+  "devDependencies": {
+    "marked": "^0.3.2",
+    "resolve-bin": "~0.3.0",
+    "update-section": "~0.3.3"
+  },
+  "scripts": {
+    "update-readme-section": "./update-readme-section.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thlorenz/v8-profiling.git"
+  },
+  "author": "Thorsten Lorenz <thlorenz@gmx.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thlorenz/v8-profiling/issues"
+  },
+  "homepage": "https://github.com/thlorenz/v8-profiling"
+}
