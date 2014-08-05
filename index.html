@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>v8-profiling by thlorenz</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>v8-profiling</h1>
+        <p>Exploring how to hook into the various v8 profilers</p>
+        <p class="view"><a href="https://github.com/thlorenz/v8-profiling">View the Project on GitHub <small>thlorenz/v8-profiling</small></a></p>
+        <ul>
+          <li><a href="https://github.com/thlorenz/v8-profiling/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/thlorenz/v8-profiling/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/thlorenz/v8-profiling">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="v8-profiling" class="anchor" href="#v8-profiling"><span class="octicon octicon-link"></span></a>v8-profiling</h1>
+
+<p>Exploring how to hook into the various v8 profilers.</p>
+
+<h2>
+<a name="tools" class="anchor" href="#tools"><span class="octicon octicon-link"></span></a>Tools</h2>
+
+<p>Interesting tools found inside <code>./tools</code>:</p>
+
+<h3>
+<a name="gc-nvp-trace-processorpy" class="anchor" href="#gc-nvp-trace-processorpy"><span class="octicon octicon-link"></span></a>gc-nvp-trace-processor.py</h3>
+
+<ul>
+<li>plots charts based on GC traces produced by running v8 with <code>--trace-gc --trace-gc-nvp</code>
+</li>
+<li>plotting performed with <a href="http://www.gnuplot.info/">gnuplot</a> (needs <a href="http://sourceforge.net/projects/aquaterm/">aquaterm</a> on Mac or just <code>brew install gnuplot</code>)</li>
+<li>invoke <code>./gc-nvp-trace-processor &lt;tracefile&gt;</code>
+</li>
+</ul><h3>
+<a name="gdb-v8-supportpy" class="anchor" href="#gdb-v8-supportpy"><span class="octicon octicon-link"></span></a>gdb-v8-support.py</h3>
+
+<ul>
+<li>v8 value pretty printers for gdb</li>
+<li>should be easy to adapt to work with lldb?</li>
+</ul><h3>
+<a name="gen-postmortem-metadatapy" class="anchor" href="#gen-postmortem-metadatapy"><span class="octicon octicon-link"></span></a>gen-postmortem-metadata.py</h3>
+
+<ul>
+<li>generates C++ file to be compiled and linked into libv8 to support postmortem debugging tools</li>
+<li>emits constants describing v8 internals
+
+<ul>
+<li>
+<code>v8dbg_type_CLASS__TYPE = VALUE</code>           Describes class type values</li>
+<li>
+<code>v8dbg_class_CLASS__FIELD__TYPE = OFFSET</code>  Describes class fields</li>
+<li>
+<code>v8dbg_parent_CLASS__PARENT</code>               Describes class hierarchy</li>
+<li>
+<code>v8dbg_frametype_NAME = VALUE</code>             Describes stack frame values</li>
+<li>
+<code>v8dbg_off_fp_NAME = OFFSET</code>               Frame pointer offsets</li>
+<li>
+<code>v8dbg_prop_NAME = OFFSET</code>                 Object property offsets</li>
+<li>
+<code>v8dbg_NAME = VALUE</code>                       Miscellaneous values</li>
+</ul>
+</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/thlorenz">thlorenz</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
