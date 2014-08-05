@@ -41,6 +41,7 @@
 
 
 import csv, sys, time, optparse
+SAMPLE_NAME='NewSpace' # get no data for 'Heap'
 
 def ProcessLogFile(filename, options):
   if options.js_cons_profile:
@@ -62,14 +63,14 @@ def ProcessLogFile(filename, options):
       print('VALUE_UNIT "bytes"')
 
       for row in logreader:
-        if row[0] == 'heap-sample-begin' and row[1] == 'Heap':
+        if row[0] == 'heap-sample-begin' and row[1] == SAMPLE_NAME:
           sample_time = float(row[3])/1000.0
           if first_call_time == None:
             first_call_time = sample_time
           sample_time -= first_call_time
           print('BEGIN_SAMPLE %.2f' % sample_time)
           sampling = True
-        elif row[0] == 'heap-sample-end' and row[1] == 'Heap':
+        elif row[0] == 'heap-sample-end' and row[1] == SAMPLE_NAME:
           print('END_SAMPLE %.2f' % sample_time)
           sampling = False
         elif row[0] == itemname and sampling:
