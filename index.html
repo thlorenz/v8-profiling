@@ -36,8 +36,7 @@
 <li>plotting performed with <a href="http://www.gnuplot.info/">gnuplot</a> (needs <a href="http://sourceforge.net/projects/aquaterm/">aquaterm</a> on Mac or just <code>brew install gnuplot</code>)</li>
 <li>invoke <code>./gc-nvp-trace-processor &lt;tracefile&gt;</code></li>
 </ul>
-<p><img src="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/tracing-gc.txt_0.png" alt="sample"></p>
-<p><a href="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/">full demo</a></p>
+<p><a href="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/"><img src="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/tracing-gc.txt_0.png" alt="sample"></a></p>
 <h3 id="gdb-v8-support-py">gdb-v8-support.py</h3>
 <ul>
 <li>v8 value pretty printers for gdb</li>
@@ -57,9 +56,75 @@
 </ul>
 </li>
 </ul>
+<h3 id="grokdump-py">grokdump.py</h3>
+<p>Minidump analyzer.</p>
+<p>Shows the processor state at the point of exception including the stack of the active thread and the referenced objects
+in the V8 heap. Code objects are disassembled and the addresses linked from the stack (e.g. pushed return addresses) are
+marked with &quot;=&gt;&quot;.</p>
+<p><em>I didn&#39;t get this to work on Mac - haven&#39;t tried on Linux yet</em> <code>Warning: Unsupported minidump header magic!</code></p>
+<p>Needs <code>objdump</code>. Install on Mac via:</p>
+<pre><code>brew install binutils
+sudo ln -s $(which gobjdump) /usr/bin/objdump
+</code></pre><p>Create a coredump via <code>gcore &lt;pid&gt;</code>. Install on Mac via <code>brew install gcore</code>.</p>
+<h3 id="lexers-shell-py-and-parser-shell-py">lexers-shell.py and parser-shell.py</h3>
+<p>Tools to benchmark the lexer and parser respectively give a nice insight into how that API works.</p>
+<h3 id="processing-tick-data">Processing Tick Data</h3>
+<p>Producing tick data which will be stored in <code>v8.log</code> in current directory.</p>
+<pre><code>node --prof --track_gc_object_stats --trace_gc_verbose --log_timer_events app.js
+</code></pre><h4 id="tick-processor-html">tick-processor.html</h4>
+<ul>
+<li>open this page in the browser and load a <code>v8.log</code> to see the text area populated with processed tick data</li>
+</ul>
+<h4 id="command-line">Command Line</h4>
+<p>Depending on your operating system use <code>mac-tick-processor</code>, <code>linux-tick-processor</code> or <code>freebsd-tick-processor</code>.</p>
+<pre><code>mac-tick-processor v8.log &gt; v8.ticks
+</code></pre><h3 id="plotting-tick-data">Plotting tick data</h3>
+<p><a href="http://thlorenz.github.io/v8-profiling/demos/profviz/profviz/profviz.html"><img src="http://thlorenz.github.io/v8-profiling/images/profviz.svg" alt="profviz"></a></p>
+<p>v8 wiki <a href="https://code.google.com/p/v8/wiki/V8Profiler">documentation</a>.</p>
+<h4 id="in-the-browser">In the browser</h4>
+<p>Do either of the below:</p>
+<ul>
+<li>a) launch the <a href="http://v8.googlecode.com/svn/branches/bleeding_edge/tools/profviz/profviz.html">bleeding edge</a> or
+<a href="http://thlorenz.github.io/v8-profiling/demos/profviz/profviz/profviz.html">included online profviz instance</a></li>
+<li>b) launch a static server in the <code>./tools</code> directory. It has to be a server in order to properly serve a needed web
+worker script. Point your browser to <code>http://localhost:PORT/profviz/profviz.html</code>  </li>
+</ul>
+<p>Then follow the instructions to load and then plot a <code>v8.log</code> file (by pressing <code>Start</code>).</p>
+<h4 id="from-the-command-line">From the command line</h4>
+<p><em>Requires gnuplot</em></p>
+<pre><code>./plot-timer-events v8.log
+</code></pre><p>If you get this error:</p>
+<pre><code>gnuplot&gt; set terminal pngcairo size 1600,600 enhanced font &#39;Helvetica,10&#39;
+                      ^
+    line 0: unknown or ambiguous terminal type; type just &#39;set terminal&#39; for a list
+</code></pre><p>apply this patch:</p>
+<pre><code class="lang-diff">---
+ tools/profviz/stdio.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/profviz/stdio.js b/tools/profviz/stdio.js
+index db38f04..b33b608 100644
+--- a/tools/profviz/stdio.js
++++ b/tools/profviz/stdio.js
+@@ -51,6 +51,6 @@ function log_error(text) {
+ var psc = new PlotScriptComposer(kResX, kResY, log_error);
+ psc.collectData(readline, distortion_per_entry);
+ psc.findPlotRange(range_start_override, range_end_override);
+-print(&quot;set terminal pngcairo size &quot; + kResX + &quot;,&quot; + kResY +
++print(&quot;set terminal png size &quot; + kResX + &quot;,&quot; + kResY +
+       &quot; enhanced font &#39;Helvetica,10&#39;&quot;);
+ psc.assembleOutput(print);
+--
+</code></pre>
+<h3 id="perf-tools">perf tools</h3>
+<h4 id="-"> </h4>
+<p>Analyses v8 perf logs to produce profiles.</p>
 
 
 <!-- END README -->
+
+
+
 
 
 
