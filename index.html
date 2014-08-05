@@ -27,56 +27,43 @@
         </ul>
       </header>
       <section>
-        <h1>
-<a name="v8-profiling" class="anchor" href="#v8-profiling"><span class="octicon octicon-link"></span></a>v8-profiling</h1>
-
+<!-- START README -->
+<h1 id="v8-profiling">v8-profiling</h1>
 <p>Exploring how to hook into the various v8 profilers.</p>
-
-<h2>
-<a name="tools" class="anchor" href="#tools"><span class="octicon octicon-link"></span></a>Tools</h2>
-
+<h2 id="tools">Tools</h2>
 <p>Interesting tools found inside <code>./tools</code>:</p>
-
-<h3>
-<a name="gc-nvp-trace-processorpy" class="anchor" href="#gc-nvp-trace-processorpy"><span class="octicon octicon-link"></span></a>gc-nvp-trace-processor.py</h3>
-
+<h3 id="gc-nvp-trace-processor-py">gc-nvp-trace-processor.py</h3>
 <ul>
-<li>plots charts based on GC traces produced by running v8 with <code>--trace-gc --trace-gc-nvp</code>
-</li>
+<li>plots charts based on GC traces produced by running v8 with <code>--trace-gc --trace-gc-nvp</code></li>
 <li>plotting performed with <a href="http://www.gnuplot.info/">gnuplot</a> (needs <a href="http://sourceforge.net/projects/aquaterm/">aquaterm</a> on Mac or just <code>brew install gnuplot</code>)</li>
-<li>invoke <code>./gc-nvp-trace-processor &lt;tracefile&gt;</code>
-</li>
-</ul><h3>
-<a name="gdb-v8-supportpy" class="anchor" href="#gdb-v8-supportpy"><span class="octicon octicon-link"></span></a>gdb-v8-support.py</h3>
-
+<li>invoke <code>./gc-nvp-trace-processor &lt;tracefile&gt;</code></li>
+</ul>
+<p><img src="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/tracing-gc.txt_0.png" alt="sample"></p>
+<p><a href="http://thlorenz.github.io/v8-profiling/demos/gc-nvp-trace-processor/">full demo</a></p>
+<h3 id="gdb-v8-support-py">gdb-v8-support.py</h3>
 <ul>
 <li>v8 value pretty printers for gdb</li>
 <li>should be easy to adapt to work with lldb?</li>
-</ul><h3>
-<a name="gen-postmortem-metadatapy" class="anchor" href="#gen-postmortem-metadatapy"><span class="octicon octicon-link"></span></a>gen-postmortem-metadata.py</h3>
-
+</ul>
+<h3 id="gen-postmortem-metadata-py">gen-postmortem-metadata.py</h3>
 <ul>
 <li>generates C++ file to be compiled and linked into libv8 to support postmortem debugging tools</li>
-<li>emits constants describing v8 internals
-
-<ul>
-<li>
-<code>v8dbg_type_CLASS__TYPE = VALUE</code>           Describes class type values</li>
-<li>
-<code>v8dbg_class_CLASS__FIELD__TYPE = OFFSET</code>  Describes class fields</li>
-<li>
-<code>v8dbg_parent_CLASS__PARENT</code>               Describes class hierarchy</li>
-<li>
-<code>v8dbg_frametype_NAME = VALUE</code>             Describes stack frame values</li>
-<li>
-<code>v8dbg_off_fp_NAME = OFFSET</code>               Frame pointer offsets</li>
-<li>
-<code>v8dbg_prop_NAME = OFFSET</code>                 Object property offsets</li>
-<li>
-<code>v8dbg_NAME = VALUE</code>                       Miscellaneous values</li>
+<li>emits constants describing v8 internals<ul>
+<li><code>v8dbg_type_CLASS__TYPE = VALUE</code>           Describes class type values</li>
+<li><code>v8dbg_class_CLASS__FIELD__TYPE = OFFSET</code>  Describes class fields</li>
+<li><code>v8dbg_parent_CLASS__PARENT</code>               Describes class hierarchy</li>
+<li><code>v8dbg_frametype_NAME = VALUE</code>             Describes stack frame values</li>
+<li><code>v8dbg_off_fp_NAME = OFFSET</code>               Frame pointer offsets</li>
+<li><code>v8dbg_prop_NAME = OFFSET</code>                 Object property offsets</li>
+<li><code>v8dbg_NAME = VALUE</code>                       Miscellaneous values</li>
 </ul>
 </li>
 </ul>
+
+
+<!-- END README -->
+
+
       </section>
     </div>
     <footer>
