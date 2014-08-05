@@ -51,6 +51,6 @@ function log_error(text) {
 var psc = new PlotScriptComposer(kResX, kResY, log_error);
 psc.collectData(readline, distortion_per_entry);
 psc.findPlotRange(range_start_override, range_end_override);
-print("set terminal pngcairo size " + kResX + "," + kResY +
+print("set terminal png size " + kResX + "," + kResY +
       " enhanced font 'Helvetica,10'");
 psc.assembleOutput(print);
